@@ -37,17 +37,17 @@
           </el-form-item>
           <el-form-item label="HSP">        
             <el-col :span="8">
-              <el-input-number type="number" size="large" v-model="h" @change="hspColorChanged" :min="1" :max="360">
+              <el-input-number type="number" size="large" v-model="h" @change="hspColorChanged" :min="0" :max="360">
                 <template slot="prepend">H</template>
               </el-input-number>
             </el-col>
             <el-col :span="8">
-              <el-input-number type="number" size="large" v-model="s" @change="hspColorChanged" :min="1" :max="100">
+              <el-input-number type="number" size="large" v-model="s" @change="hspColorChanged" :min="0" :max="100">
                 <template slot="prepend">S</template>
               </el-input-number>
             </el-col>
             <el-col :span="8">
-              <el-input-number type="number" size="large" v-model="p" @change="hspColorChanged" :min="1" :max="255">
+              <el-input-number type="number" size="large" v-model="p" @change="hspColorChanged" :min="0" :max="255">
                 <template slot="prepend">P</template>
               </el-input-number>
             </el-col>

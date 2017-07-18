@@ -1,6 +1,8 @@
 <template>
-  <div class="colors">    
-    <el-row :gutter="20">
+  <div class="colors"> 
+    <SingleColor v-for="(hex, index) in hexColors" :hexColor="hex" :index="index" :key="index" @update="updateHexColors"></SingleColor>
+    <el-button type="primary" @click="addColor">Add color</el-button>
+    <!-- <el-row :gutter="20">
       <el-col class="color__example-container" :span="6" :offset="3">
         <div class="color__example-1" v-bind:style="{ 'background-color': `rgb(${this.rgb.join(',')})` }"></div>
         <div class="color__example-bw-1" v-bind:style="{ 'background-color': `rgb(${this.rgbbw.join(',')})` }"></div>
@@ -54,11 +56,11 @@
           </el-form-item>
         </el-form>
       </el-col>      
-    </el-row>
+    </el-row> -->
     <div class="colors__gradient">
       <template class="p-axis" v-for="(pIndex, n) in 52">      
         <template v-for="(hIndex, m) in 37" class="h-axis">
-           <GradientColor :h="(hIndex-1)*10" :s="parseInt(s, 10)" :p="255-(pIndex - 1)*5"></GradientColor> 
+           <!-- <GradientColor :h="(hIndex-1)*10" :s="parseInt(s, 10)" :p="255-(pIndex - 1)*5"></GradientColor>  -->
         </template>
       </template>    
     </div>
@@ -70,11 +72,13 @@ import _ from 'lodash';
 import CSpace from 'color-space';
 import CString from 'color-string';
 import GradientColor from './GradientColor';
+import SingleColor from './SingleColor';
 
 export default {
   name: 'colors',
   components: {
     GradientColor,
+    SingleColor,
   },
   data() {
     const hexFromHash = window.location.hash.slice(1) || 'ffdb4d';
@@ -89,6 +93,7 @@ export default {
       g: rgbArr[1],
       b: rgbArr[2],
       hexColor: hexFromHash,
+      hexColors: ['ffdb4d'],
     };
   },
   computed: {
@@ -120,6 +125,12 @@ export default {
     },
   },
   methods: {
+    addColor() {
+      this.hexColors.push(this.hexColors[this.hexColors.length - 1]);
+    },
+    updateHexColors(data) {
+      this.hexColors.splice(data.index, 1, data.hex);
+    },
     recalculateRGB: _.throttle(function () {
       const rgbArr = CSpace.hsp.rgb(this.hsp);
       this.r = rgbArr[0];

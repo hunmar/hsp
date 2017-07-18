@@ -2,7 +2,12 @@
   <div class="colors">    
     <el-row :gutter="20">
       <el-col class="color__example-container" :span="6" :offset="3">
-        <div class="color__example" v-bind:style="{ 'background-color': `rgb(${this.rgb.join(',')})` }"></div>
+        <div class="color__example-1" v-bind:style="{ 'background-color': `rgb(${this.rgb.join(',')})` }"></div>
+        <div class="color__example-bw-1" v-bind:style="{ 'background-color': `rgb(${this.rgbbw.join(',')})` }"></div>
+        <div class="color__example-2" v-bind:style="{ 'background-color': `rgb(${this.rgb2.join(',')})` }"></div>
+        <div class="color__example-bw-2" v-bind:style="{ 'background-color': `rgb(${this.rgbbw2.join(',')})` }"></div>
+        <div class="color__example-3" v-bind:style="{ 'background-color': `rgb(${this.rgb3.join(',')})` }"></div>
+        <div class="color__example-bw-3" v-bind:style="{ 'background-color': `rgb(${this.rgbbw3.join(',')})` }"></div>
       </el-col>
       <el-col :span="12">
         <el-form ref="form" label-width="50px">          
@@ -72,8 +77,8 @@ export default {
     GradientColor,
   },
   data() {
-    const hexFromHash = window.location.hash.slice(1) || 'fff';
-    const rgbArr = CString.get.rgb(`#${hexFromHash}`) || [255, 255, 255];
+    const hexFromHash = window.location.hash.slice(1) || 'ffdb4d';
+    const rgbArr = CString.get.rgb(`#${hexFromHash}`) || [255, 219, 77];
     const hspArr = CSpace.rgb.hsp(rgbArr);
 
     return {
@@ -90,6 +95,26 @@ export default {
     rgb() {
       return [parseInt(this.r, 10), parseInt(this.g, 10), parseInt(this.b, 10)];
     },
+    rgbbw() {
+      return CSpace.hsp.rgb([parseInt(this.h, 10), 0, parseInt(this.p, 10)]);
+    },
+
+    rgb2() {
+      return CSpace.hsp.rgb([
+        (parseInt(this.h, 10) + 120) % 360, parseInt(this.s, 10), parseInt(this.p, 10)]);
+    },
+    rgbbw2() {
+      return CSpace.hsp.rgb([(parseInt(this.h, 10) + 120) % 360, 0, parseInt(this.p, 10)]);
+    },
+
+    rgb3() {
+      return CSpace.hsp.rgb([
+        (parseInt(this.h, 10) + 240) % 360, parseInt(this.s, 10), parseInt(this.p, 10)]);
+    },
+    rgbbw3() {
+      return CSpace.hsp.rgb([(parseInt(this.h, 10) + 240) % 360, 0, parseInt(this.p, 10)]);
+    },
+
     hsp() {
       return [parseInt(this.h, 10), parseInt(this.s, 10), parseInt(this.p, 10)];
     },
@@ -153,13 +178,52 @@ export default {
   position: relative;
   height: 170px;
 }
-.color__example {
+.color__example-1 {
   position: absolute;
   top: 0;
+  bottom: 66%;
+  left: 50%;
+  right: 0;  
+}
+
+.color__example-bw-1 {
+  position: absolute;
+  top: 0;
+  bottom: 66%;
+  left: 0;
+  right: 50%;
+}
+
+.color__example-2 {
+  position: absolute;
+  top: 33%;
+  bottom: 33%;
+  left: 50%;
+  right: 0;  
+}
+
+.color__example-bw-2 {
+  position: absolute;
+  top: 33%;
+  bottom: 33%;
+  left: 0;
+  right: 50%;
+}
+
+.color__example-3 {
+  position: absolute;
+  top: 66%;
+  bottom: 0;
+  left: 50%;
+  right: 0;  
+}
+
+.color__example-bw-3 {
+  position: absolute;
+  top: 66%;
   bottom: 0;
   left: 0;
-  right: 0;
-  border: 1px solid rgba(128, 128, 128, 0.5);
+  right: 50%;
 }
 
 .colors__gradient {

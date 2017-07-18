@@ -1,5 +1,5 @@
 <template>
-  <span class="h-axis" :class="{ 'h-axis_bad': isBadClass, 'h-axis_good': !isBadClass }" :style="calculateRGB([h, s, p])"></span>
+  <span class="h-axis" :class="{ 'h-axis_bad': isBadClass, 'h-axis_good': !isBadClass }" :style="calculateRGB([h, s >= 0 ? s : 0, p])"></span>
 </template>
 
 <script>

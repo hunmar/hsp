@@ -55,7 +55,12 @@ export default {
   },
   methods: {
     handleChange() {
-      const rgbArr = CSpace.hsp.rgb(this.hsp);
+      let rgbArr = CSpace.hsp.rgb(this.hsp);
+
+      while (rgbArr[0] > 255 || rgbArr[1] > 255 || rgbArr[2] > 255) {
+        this.s = this.s - 1;
+        rgbArr = CSpace.hsp.rgb(this.hsp);
+      }
 
       this.r = rgbArr[0];
       this.g = rgbArr[1];

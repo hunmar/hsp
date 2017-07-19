@@ -9,13 +9,13 @@
                         <template slot="prepend">#</template>
                     </el-input>
 
-                    <el-input-number v-model="h" @change="handleChange" :min="1" :max="360">
+                    <el-input-number v-model="h" @change="handleChange" :min="0" :max="360">
                         <template slot="prepend">H</template>
                     </el-input-number>
-                    <el-input-number v-model="s" @change="handleChange" :min="1" :max="100">
+                    <el-input-number v-model="s" @change="handleChange" :min="0" :max="100">
                         <template slot="prepend">S</template>
                     </el-input-number>
-                    <el-input-number v-model="p" @change="handleChange" :min="1" :max="255">
+                    <el-input-number v-model="p" @change="handleChange" :min="0" :max="255">
                         <template slot="prepend">P</template>
                     </el-input-number>
                 </div>

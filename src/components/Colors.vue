@@ -81,7 +81,8 @@ export default {
     SingleColor,
   },
   data() {
-    const hexFromHash = window.location.hash.slice(1) || 'ffdb4d';
+    const hexFromHash = 'ffdb4d';
+    const colorsFromHash = window.location.hash ? window.location.hash.slice(1).split(',') : ['ffdb4d'];
     const rgbArr = CString.get.rgb(`#${hexFromHash}`) || [255, 219, 77];
     const hspArr = CSpace.rgb.hsp(rgbArr);
 
@@ -93,7 +94,7 @@ export default {
       g: rgbArr[1],
       b: rgbArr[2],
       hexColor: hexFromHash,
-      hexColors: ['ffdb4d'],
+      hexColors: colorsFromHash,
     };
   },
   computed: {
@@ -127,9 +128,11 @@ export default {
   methods: {
     addColor() {
       this.hexColors.push(this.hexColors[this.hexColors.length - 1]);
+      window.location.hash = this.hexColors.join(',');
     },
     updateHexColors(data) {
       this.hexColors.splice(data.index, 1, data.hex);
+      window.location.hash = this.hexColors.join(',');
     },
     recalculateRGB: _.throttle(function () {
       const rgbArr = CSpace.hsp.rgb(this.hsp);
@@ -173,7 +176,7 @@ export default {
       const rgbHEX = CString.to.hex(rgbArr);
 
       if (rgbHEX) {
-        window.location.hash = rgbHEX.slice(1);
+        // window.location.hash = rgbHEX.slice(1);
         if (rewriteHEX) {
           this.hexColor = rgbHEX.slice(1);
         }

@@ -1,23 +1,26 @@
 <template>
     <el-row>
-        <el-col :span="8">
-            <el-card class="box-card" :body-style="{ padding: '0px', display: 'flex', 'align-items': 'stretch' }">
-                <div class="color" v-bind:style="{ 'background-color': `rgb(${this.rgb.join(',')})` }"></div>
+        <el-col>
+            <el-card>
+                <div class="box-card">
+                    <div class="color" v-bind:style="{ 'background-color': `rgb(${this.rgb.join(',')})` }"></div>
 
-                <div class="controls">
-                    <el-input size="large" v-model="hex" @change="hexColorChanged">
-                        <template slot="prepend">#</template>
-                    </el-input>
+                    <div class="controls">
+                        <div class ="hex-input"
+                        <el-input v-model="hex" @change="hexColorChanged">
+                            <template slot="prepend">#</template>
+                        </el-input></div>
 
-                    <el-input-number v-model="h" @change="handleChange" :min="0" :max="360">
-                        <template slot="prepend">H</template>
-                    </el-input-number>
-                    <el-input-number v-model="s" @change="handleChange" :min="0" :max="100">
-                        <template slot="prepend">S</template>
-                    </el-input-number>
-                    <el-input-number v-model="p" @change="handleChange" :min="0" :max="255">
-                        <template slot="prepend">P</template>
-                    </el-input-number>
+                        <el-input-number v-model="h" @change="handleChange" :min="0" :max="360" :controls="false">
+                            <template slot="prepend">H</template>
+                        </el-input-number>
+                        <el-input-number v-model="s" @change="handleChange" :min="0" :max="100" :controls="false">
+                            <template slot="prepend">S</template>
+                        </el-input-number>
+                        <el-input-number v-model="p" @change="handleChange" :min="0" :max="255" :controls="false">
+                            <template slot="prepend">P</template>
+                        </el-input-number>
+                    </div>
                 </div>
             </el-card>
         </el-col>
@@ -96,14 +99,46 @@ export default {
 
 <style scoped>
     .color {
-        width: 500px;
+        width: 50px;
+        min-height: 50px;
+        display: inline-block;
     }
 
     .controls {
+        display: inline-block;
     }
-    
-    .el-card__body {
+
+    .el-card {
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+    }
+
+    .el-input-number {
+        width: 100px;
+        margin-left: 12px;
+    }
+
+    .el-input {
+        width: 120px;
+        margin-left: 12px;
+    }
+
+    .box-card {
         display: flex;
         align-items: stretch;
     }
+
+</style>
+
+<style>
+.el-input__inner, .el-input-group__prepend {
+    /*color: red;*/
+    border: none;
+    padding-right: 0;
+}
+
+.el-card__body {
+    padding: 0;
+}
 </style>

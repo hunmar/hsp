@@ -17,7 +17,7 @@
                         </el-input-number>
                         <el-input-number :disabled="true" :min="0" :max="100" :controls="false" :value="this.s">
                             <template slot="prepend">S</template>
-                        </el-input-number>                        
+                        </el-input-number>
                         <el-input-number @change="handleChangeP" :min="0" :max="255" :controls="false"  :value="this.p">
                             <template slot="prepend">P</template>
                         </el-input-number>
@@ -195,7 +195,7 @@ export default {
 }
 
 .el-input-number {
-    width: 140px;
+    width: 100px;
     margin-left: 12px;
 }
 

@@ -189,7 +189,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSpace to this component only -->
 <style scoped>
 .colors {
-  width: 550px;
+  width: 800px;
   margin: auto;
 }
 

@@ -12,12 +12,11 @@
                         <el-input-number @change="handleChangeH" :min="0" :max="360" :controls="false" :value="this.h">
                             <template slot="prepend">H</template>
                         </el-input-number>
-                        <el-input-number @change="handleChangeS" :min="0" :max="100" :controls="false" :value="this.s">
-                            <template slot="prepend">S
-                                <span class="color__delta" @click="makeCleanColor" v-bind:style="{ 'color': this.maxS - this.s >= 0 ? `rgb(0,255,0)` : `rgb(255,0,0)` }">
-                                    {{ this.maxS - this.s > 0 ? '+' : '' }}{{ this.maxS - this.s }}
-                                </span>
-                            </template>
+                        <el-input-number @change="handleChangeSR" :min="0" :max="100" :controls="false" :value="this.sr">
+                            <template slot="prepend">S%</template>
+                        </el-input-number>
+                        <el-input-number :disabled="true" :min="0" :max="100" :controls="false" :value="this.s">
+                            <template slot="prepend">S</template>
                         </el-input-number>
                         <el-input-number @change="handleChangeP" :min="0" :max="255" :controls="false" :value="this.p">
                             <template slot="prepend">P</template>
@@ -30,6 +29,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import CSpace from 'color-space'
 import CString from 'color-string'
 
@@ -39,10 +39,12 @@ export default {
     data() {
         const rgbArr = CString.get.rgb(`#${this.hexColor}`)
         const hspArr = CSpace.rgb.hsp(rgbArr)
+        const maxS = this.getMaxSFromHSP(hspArr[0], hspArr[2])
+        const intSr = this.getIntSR([rgbArr[0], rgbArr[1], rgbArr[2]], hspArr, maxS)
 
         return {
             h: hspArr[0],
-            s: hspArr[1],
+            sr: intSr,
             p: hspArr[2],
             r: rgbArr[0],
             g: rgbArr[1],
@@ -55,33 +57,55 @@ export default {
             console.log('Calc HSP')
             return [parseInt(this.h, 10), parseInt(this.s, 10), parseInt(this.p, 10)]
         },
+        hsrp() {
+            console.log('Calc HSrP')
+            return [parseInt(this.h, 10), parseInt(this.sr, 10)*this.maxS/100, parseInt(this.p, 10)]
+        },
         rgb() {
             return [parseInt(this.r, 10), parseInt(this.g, 10), parseInt(this.b, 10)]
         },
+        s() {
+            console.log('s', this.maxS*this.sr/100)
+            return this.maxS*this.sr/100
+        },
         maxS() {
-            let maxS = 0
-            let rgbArr = CSpace.hsp.rgb([parseInt(this.h, 10), maxS, parseInt(this.p, 10)])
-            while (rgbArr[0] <= 255 && rgbArr[1] <= 255 && rgbArr[2] <= 255) {
-                if (maxS === 100) {
-                    maxS = maxS + 1
-                    break
-                }
-                maxS = maxS + 1
-                rgbArr = CSpace.hsp.rgb([parseInt(this.h, 10), maxS, parseInt(this.p, 10)])
-            }
-
-            maxS = maxS - 1
-
-            return maxS
+            return this.getMaxSFromHSP(this.h, this.p)
         },
     },
     methods: {
+        getIntSR(etalonRGB, etalonHSP, maxS)
+        {
+            let h = etalonHSP[0]
+            let sr = etalonHSP[1]/maxS*100
+            let p = etalonHSP[2]
+            
+            console.log('etalonRGB', etalonRGB)
+            
+            if (sr === parseInt(sr, 10)) {
+                console.log('sr')
+                return sr
+            }
+            
+            let roundSR = Math.round(sr);
+            console.log('roundSR', CSpace.hsp.rgb([h, roundSR*maxS/100, p]))
+            if (_.isEqual(CSpace.hsp.rgb([h, roundSR*maxS/100, p]), etalonRGB)) {
+                console.log('roundSR')
+                return roundSR
+            }
+
+            let floorSR = Math.floor(sr);
+            console.log('floorSR', CSpace.hsp.rgb([h, floorSR*maxS/100, p]))
+            if (_.isEqual(CSpace.hsp.rgb([h, floorSR*maxS/100, p]), etalonRGB)) {
+                console.log('floorSR')
+                return floorSR
+            }
+        },
         handleChangeH(next, prev) {
             this.h = next
             this.handleChange()
         },
-        handleChangeS(next, prev) {
-            this.s = next
+        handleChangeSR(next, prev) {
+            this.sr = next            
             this.handleChange()
         },
         handleChangeP(next, prev) {
@@ -89,9 +113,7 @@ export default {
             this.handleChange()
         },
         handleChange() {
-            console.log(arguments)
-            console.log(this.hsp)
-            let rgbArr = CSpace.hsp.rgb(this.hsp)
+            let rgbArr = CSpace.hsp.rgb(this.hsrp)
 
             // while (rgbArr[0] > 255 || rgbArr[1] > 255 || rgbArr[2] > 255) {
             //     this.s = this.s - 1;
@@ -111,6 +133,24 @@ export default {
                 this.hex = 'Wrong HEX'
             }
         },
+        getMaxSFromHSP(h, p) {                    
+            let maxS = 0
+
+            let rgbArr = CSpace.hsp.rgb([h, maxS, p])
+
+            while (rgbArr[0] <= 255 && rgbArr[1] <= 255 && rgbArr[2] <= 255) {
+                if (maxS === 100) {
+                    maxS = maxS + 1
+                    break
+                }
+                maxS = maxS + 1
+                rgbArr = CSpace.hsp.rgb([h, maxS, p])
+            }
+            
+            maxS = maxS - 1
+            console.log('maxS', maxS)
+            return maxS
+        },
         hexColorChanged(next, prev) {
             this.hex = next
             const rgbArr = CString.get.rgb(`#${this.hex}`)
@@ -123,7 +163,7 @@ export default {
                 const hspArr = CSpace.rgb.hsp(this.rgb)
 
                 this.h = hspArr[0]
-                this.s = hspArr[1]
+                this.sr = hspArr[1]/this.maxS*100
                 this.p = hspArr[2]
 
                 this.$emit('update', { index: this.index, hex: this.hex })
@@ -139,7 +179,7 @@ export default {
 
 <style>
 .color {
-    width: 50px;
+    width: 100px;
     min-height: 50px;
     display: inline-block;
 }
@@ -160,7 +200,7 @@ export default {
 }
 
 .el-input {
-    width: 120px;
+    width: 100px;
     margin-left: 12px;
 }
 

@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import CSpace from 'color-space'
 import CString from 'color-string'
 
@@ -39,10 +40,11 @@ export default {
         const rgbArr = CString.get.rgb(`#${this.hexColor}`)
         const hspArr = CSpace.rgb.hsp(rgbArr)
         const maxS = this.getMaxSFromHSP(hspArr[0], hspArr[2])
+        const intSr = this.getIntSR([rgbArr[0], rgbArr[1], rgbArr[2]], hspArr, maxS)
 
         return {
             h: hspArr[0],
-            sr: hspArr[1]/maxS*100,
+            sr: intSr,
             p: hspArr[2],
             r: rgbArr[0],
             g: rgbArr[1],
@@ -63,6 +65,7 @@ export default {
             return [parseInt(this.r, 10), parseInt(this.g, 10), parseInt(this.b, 10)]
         },
         s() {
+            console.log('s', this.maxS*this.sr/100)
             return this.maxS*this.sr/100
         },
         maxS() {
@@ -70,6 +73,33 @@ export default {
         },
     },
     methods: {
+        getIntSR(etalonRGB, etalonHSP, maxS)
+        {
+            let h = etalonHSP[0]
+            let sr = etalonHSP[1]/maxS*100
+            let p = etalonHSP[2]
+            
+            console.log('etalonRGB', etalonRGB)
+            
+            if (sr === parseInt(sr, 10)) {
+                console.log('sr')
+                return sr
+            }
+            
+            let roundSR = Math.round(sr);
+            console.log('roundSR', CSpace.hsp.rgb([h, roundSR*maxS/100, p]))
+            if (_.isEqual(CSpace.hsp.rgb([h, roundSR*maxS/100, p]), etalonRGB)) {
+                console.log('roundSR')
+                return roundSR
+            }
+
+            let floorSR = Math.floor(sr);
+            console.log('floorSR', CSpace.hsp.rgb([h, floorSR*maxS/100, p]))
+            if (_.isEqual(CSpace.hsp.rgb([h, floorSR*maxS/100, p]), etalonRGB)) {
+                console.log('floorSR')
+                return floorSR
+            }
+        },
         handleChangeH(next, prev) {
             this.h = next
             this.handleChange()

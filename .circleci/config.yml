@@ -16,6 +16,10 @@ jobs:
 
     working_directory: ~/repo
 
+    branches:
+      only:
+        - master
+
     steps:
       - checkout
 
@@ -38,11 +42,12 @@ jobs:
       - store_artifacts:
           path: dist
           prefix: dist
-      - run: |
-          git config --global -l
-          git config --global user.email circleci@circleci
-          git config --global user.name CircleCI
-      - run: npm run deploy
+      
+      - run: 
+            command: |
+                ./scripts/deploy-ghpages.sh dist
+
+      
       
 
 

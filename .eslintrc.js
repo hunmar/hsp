@@ -2,38 +2,33 @@
 
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
   parserOptions: {
     sourceType: 'module'
   },
   env: {
     browser: true,
   },
-  extends: 'airbnb-base',
+  "extends": [
+    "eslint:recommended",
+    "plugin:vue/recommended"
+  ],
   // required to lint *.vue files
   plugins: [
-    'html', 'vue'
+    'html'
   ],
-  // check if imports actually resolve
-  'settings': {
-    'import/resolver': {
-      'webpack': {
-        'config': 'build/webpack.base.conf.js'
-      }
-    }
-  },
   // add your custom rules here
   'rules': {
-    // don't require .vue extension when importing
-    'import/extensions': ['error', 'always', {
-      'js': 'never',
-      'vue': 'never'
-    }],
-    // allow optionalDependencies
-    'import/no-extraneous-dependencies': ['error', {
-      'optionalDependencies': ['test/unit/index.js']
-    }],
+    "import/no-unresolved": 0,
+    "import/no-unassigned-import": 0,
+    "vue/html-no-self-closing": "error",
+    "semi": ["error", "never"],
+    "no-console": "off",
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+  },
+  "parserOptions": {
+    "parser": "babel-eslint",
+    "ecmaVersion": 2017,
+    "sourceType": "module"
   }
 }

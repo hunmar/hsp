@@ -4,7 +4,7 @@
             <el-card>
                 <div class="box-card">
                     <div class="color" v-bind:style="{ 'background-color': `rgb(${this.rgb.join(',')})` }"></div>
-    
+
                     <div class="controls">
                         <el-input @change="hexColorChanged" :value="this.hex">
                             <template slot="prepend">#</template>
@@ -12,15 +12,26 @@
                         <el-input-number @change="handleChangeH" :min="0" :max="360" :controls="false" :value="this.h">
                             <template slot="prepend">H</template>
                         </el-input-number>
-                        <el-input-number @change="handleChangeSR" :min="0" :max="100" :controls="false" :value="this.sr">
-                            <template slot="prepend">S%</template>
-                        </el-input-number>
-                        <el-input-number :disabled="true" :min="0" :max="100" :controls="false" :value="this.s">
+                        <el-input-number @change="handleChangeS" :min="0" :max="100" :controls="false" :value="this.s">
                             <template slot="prepend">S</template>
+                        </el-input-number>
+                        <el-input-number :disabled="true" :min="0" :max="100" :controls="false" :value="this.sr">
+                            <template slot="prepend">S%</template>
                         </el-input-number>
                         <el-input-number @change="handleChangeP" :min="0" :max="255" :controls="false" :value="this.p">
                             <template slot="prepend">P</template>
                         </el-input-number>
+                        <div class="meta">
+                            <span>
+                                Max S: {{ this.maxS }}
+                            </span>
+                            <span>
+                                Delta S: {{ this.maxS - this.s }}
+                            </span>
+                            <span>
+                                Fixed S: {{ this.fixedS }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </el-card>
@@ -44,7 +55,7 @@ export default {
 
         return {
             h: hspArr[0],
-            sr: intSr,
+            s: parseInt(hspArr[1], 10),
             p: hspArr[2],
             r: rgbArr[0],
             g: rgbArr[1],
@@ -55,7 +66,9 @@ export default {
     computed: {
         hsp() {
             console.log('Calc HSP')
-            return [parseInt(this.h, 10), parseInt(this.s, 10), parseInt(this.p, 10)]
+            var s = this.fixedS < parseInt(this.s, 10) ? this.fixedS : parseInt(this.s, 10)
+
+            return [parseInt(this.h, 10), s, parseInt(this.p, 10)]
         },
         hsrp() {
             console.log('Calc HSrP')
@@ -64,28 +77,41 @@ export default {
         rgb() {
             return [parseInt(this.r, 10), parseInt(this.g, 10), parseInt(this.b, 10)]
         },
-        s() {
-            console.log('s', this.maxS*this.sr/100)
-            return this.maxS*this.sr/100
+        sr() {
+            return this.s/this.maxS*100
         },
         maxS() {
             return this.getMaxSFromHSP(this.h, this.p)
         },
+        fixedS() {
+            if (this.s > this.maxS) {
+                let rgbArr = CSpace.hsp.rgb([this.h, this.s, this.p])
+                let fixedS = this.s
+
+                while (fixedS > 0 && (rgbArr[0] > 255 || rgbArr[1] > 255 || rgbArr[2] > 255)) {
+                    fixedS = fixedS - 1;
+                    rgbArr = CSpace.hsp.rgb([this.h, fixedS, this.p]);
+                }
+
+                return fixedS
+            } else {
+                return this.s
+            }
+        }
     },
     methods: {
-        getIntSR(etalonRGB, etalonHSP, maxS)
-        {
+        getIntSR(etalonRGB, etalonHSP, maxS) {
             let h = etalonHSP[0]
             let sr = etalonHSP[1]/maxS*100
             let p = etalonHSP[2]
-            
+
             console.log('etalonRGB', etalonRGB)
-            
+
             if (sr === parseInt(sr, 10)) {
                 console.log('sr')
                 return sr
             }
-            
+
             let roundSR = Math.round(sr);
             console.log('roundSR', CSpace.hsp.rgb([h, roundSR*maxS/100, p]))
             if (_.isEqual(CSpace.hsp.rgb([h, roundSR*maxS/100, p]), etalonRGB)) {
@@ -104,8 +130,12 @@ export default {
             this.h = next
             this.handleChange()
         },
+        handleChangeS(next, prev) {
+            this.s = next
+            this.handleChange()
+        },
         handleChangeSR(next, prev) {
-            this.sr = next            
+            this.sr = next
             this.handleChange()
         },
         handleChangeP(next, prev) {
@@ -113,12 +143,7 @@ export default {
             this.handleChange()
         },
         handleChange() {
-            let rgbArr = CSpace.hsp.rgb(this.hsrp)
-
-            // while (rgbArr[0] > 255 || rgbArr[1] > 255 || rgbArr[2] > 255) {
-            //     this.s = this.s - 1;
-            //     rgbArr = CSpace.hsp.rgb(this.hsp);
-            // }
+            let rgbArr = CSpace.hsp.rgb(this.hsp)
 
             this.r = rgbArr[0]
             this.g = rgbArr[1]
@@ -133,7 +158,7 @@ export default {
                 this.hex = 'Wrong HEX'
             }
         },
-        getMaxSFromHSP(h, p) {                    
+        getMaxSFromHSP(h, p) {
             let maxS = 0
 
             let rgbArr = CSpace.hsp.rgb([h, maxS, p])
@@ -146,7 +171,7 @@ export default {
                 maxS = maxS + 1
                 rgbArr = CSpace.hsp.rgb([h, maxS, p])
             }
-            
+
             maxS = maxS - 1
             console.log('maxS', maxS)
             return maxS
@@ -222,5 +247,10 @@ export default {
 
 .el-card__body {
     padding: 0;
+}
+
+.meta {
+    margin-left: 24px;
+    font-size: 12px;
 }
 </style>

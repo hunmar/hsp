@@ -1,9 +1,9 @@
 <template>
   <div class="colors">
-    <template v-for="(hsp, index) in hspColors">
-      <SingleColor :hspColor="hsp" :index="index" :key="index" @update="updatehspColors"></SingleColor>
-      <!-- <Bridge v-if="hspColors.length > index + 1" :hspColorTop="hspColors[index]" :hspColorBottom="hspColors[index+1]"/> -->
-    </template>
+    <Draggable :list="hspColors" :options="{handler:'.color'}">
+          <SingleColor v-for="(hsp, index) in hspColors" :hspColor="hsp" :index="index" :key="hsp+index" @update="updatehspColors"></SingleColor>
+          <!-- <Bridge v-if="hspColors.length > index + 1" :hspColorTop="hspColors[index]" :hspColorBottom="hspColors[index+1]"/> -->
+    </Draggable>
     <el-button class="add-btn" type="primary" @click="addColor">Add color</el-button>
     <!-- <el-row :gutter="20">
             <el-col class="color__example-container" :span="6" :offset="3">
@@ -72,6 +72,7 @@
 
 <script>
 import _ from 'lodash'
+import Draggable from 'vuedraggable'
 import CSpace from 'color-space'
 import CString from 'color-string'
 import GradientColor from './GradientColor'
@@ -81,6 +82,7 @@ import Bridge from './Bridge'
 export default {
   name: 'colors',
   components: {
+    Draggable,
     GradientColor,
     SingleColor,
     Bridge,

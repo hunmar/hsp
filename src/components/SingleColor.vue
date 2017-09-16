@@ -1,5 +1,5 @@
 <template>
-    <el-row>
+    <el-row class="single-color">
         <el-col>
             <el-card>
                 <div class="box-card">

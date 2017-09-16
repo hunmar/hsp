@@ -23,7 +23,7 @@
                                 Max S: {{ this.maxS }}
                             </span>
                             <span>
-                                % S: {{  this.sr.toFixed(2) }}
+                                % S: {{ this.sr.toFixed(2) }}
                             </span>
                             <span>
                                 Delta S: {{ this.maxS - this.s }}
@@ -74,13 +74,13 @@ export default {
         },
         hsrp() {
             console.log('Calc HSrP')
-            return [parseInt(this.h, 10), parseInt(this.sr, 10)*this.maxS/100, parseInt(this.p, 10)]
+            return [parseInt(this.h, 10), parseInt(this.sr, 10) * this.maxS / 100, parseInt(this.p, 10)]
         },
         rgb() {
             return [parseInt(this.r, 10), parseInt(this.g, 10), parseInt(this.b, 10)]
         },
         sr() {
-            return this.s/this.maxS*100
+            return this.s / this.maxS * 100
         },
         maxS() {
             return this.getMaxSFromHSP(this.h, this.p)
@@ -104,7 +104,7 @@ export default {
     methods: {
         getIntSR(etalonRGB, etalonHSP, maxS) {
             let h = etalonHSP[0]
-            let sr = etalonHSP[1]/maxS*100
+            let sr = etalonHSP[1] / maxS * 100
             let p = etalonHSP[2]
 
             console.log('etalonRGB', etalonRGB)
@@ -115,15 +115,15 @@ export default {
             }
 
             let roundSR = Math.round(sr);
-            console.log('roundSR', CSpace.hsp.rgb([h, roundSR*maxS/100, p]))
-            if (_.isEqual(CSpace.hsp.rgb([h, roundSR*maxS/100, p]), etalonRGB)) {
+            console.log('roundSR', CSpace.hsp.rgb([h, roundSR * maxS / 100, p]))
+            if (_.isEqual(CSpace.hsp.rgb([h, roundSR * maxS / 100, p]), etalonRGB)) {
                 console.log('roundSR')
                 return roundSR
             }
 
             let floorSR = Math.floor(sr);
-            console.log('floorSR', CSpace.hsp.rgb([h, floorSR*maxS/100, p]))
-            if (_.isEqual(CSpace.hsp.rgb([h, floorSR*maxS/100, p]), etalonRGB)) {
+            console.log('floorSR', CSpace.hsp.rgb([h, floorSR * maxS / 100, p]))
+            if (_.isEqual(CSpace.hsp.rgb([h, floorSR * maxS / 100, p]), etalonRGB)) {
                 console.log('floorSR')
                 return floorSR
             }
@@ -191,7 +191,7 @@ export default {
                 const hspArr = CSpace.rgb.hsp(this.rgb)
 
                 this.h = hspArr[0]
-                this.sr = hspArr[1]/this.maxS*100
+                this.sr = hspArr[1] / this.maxS * 100
                 this.p = hspArr[2]
 
                 this.$emit('update', { index: this.index, hsp: [this.h, this.s, this.p].join(',') })
@@ -202,6 +202,9 @@ export default {
             this.handleChange()
         },
     },
+    mounted() {
+        this.handleChange()
+    }
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="colors">
-    <SingleColor v-for="(hex, index) in hexColors" :hexColor="hex" :index="index" :key="index" @update="updateHexColors"></SingleColor>
+    <SingleColor v-for="(hsp, index) in hspColors" :hspColor="hsp" :index="index" :key="index" @update="updatehspColors"></SingleColor>
     <el-button class="add-btn" type="primary" @click="addColor">Add color</el-button>
     <!-- <el-row :gutter="20">
             <el-col class="color__example-container" :span="6" :offset="3">
@@ -81,8 +81,8 @@ export default {
     SingleColor,
   },
   data() {
-    const hexFromHash = 'ffdb4d'
-    const colorsFromHash = window.location.hash ? window.location.hash.slice(1).split(',') : ['ffdb4d']
+    const hexFromHash = 'FFDC4F'
+    const colorsFromHash = window.location.hash ? window.location.hash.slice(1).split(';') : ['48,69,220']
     const rgbArr = CString.get.rgb(`#${hexFromHash}`) || [255, 219, 77]
     const hspArr = CSpace.rgb.hsp(rgbArr)
 
@@ -94,7 +94,7 @@ export default {
       g: rgbArr[1],
       b: rgbArr[2],
       hexColor: hexFromHash,
-      hexColors: colorsFromHash,
+      hspColors: colorsFromHash,
     }
   },
   computed: {
@@ -127,12 +127,12 @@ export default {
   },
   methods: {
     addColor() {
-      this.hexColors.push(this.hexColors[this.hexColors.length - 1])
-      window.location.hash = this.hexColors.join(',')
+      this.hspColors.push(this.hspColors[this.hspColors.length - 1])
+      window.location.hash = this.hspColors.join(';')
     },
-    updateHexColors(data) {
-      this.hexColors.splice(data.index, 1, data.hex)
-      window.location.hash = this.hexColors.join(',')
+    updatehspColors(data) {
+      this.hspColors.splice(data.index, 1, data.hsp)
+      window.location.hash = this.hspColors.join(';')
     },
     recalculateRGB: _.throttle(function () {
       const rgbArr = CSpace.hsp.rgb(this.hsp)

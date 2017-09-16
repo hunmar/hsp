@@ -15,15 +15,15 @@
                         <el-input-number @change="handleChangeS" :min="0" :max="100" :controls="false" :value="this.s">
                             <template slot="prepend">S</template>
                         </el-input-number>
-                        <el-input-number :disabled="true" :min="0" :max="100" :controls="false" :value="this.sr">
-                            <template slot="prepend">S%</template>
-                        </el-input-number>
                         <el-input-number @change="handleChangeP" :min="0" :max="255" :controls="false" :value="this.p">
                             <template slot="prepend">P</template>
                         </el-input-number>
                         <div class="meta">
                             <span>
                                 Max S: {{ this.maxS }}
+                            </span>
+                            <span>
+                                % S: {{  this.sr.toFixed(2) }}
                             </span>
                             <span>
                                 Delta S: {{ this.maxS - this.s }}
@@ -46,21 +46,23 @@ import CString from 'color-string'
 
 export default {
     name: 'SingleColor',
-    props: ['index', 'hexColor'],
+    props: ['index', 'hspColor'],
     data() {
-        const rgbArr = CString.get.rgb(`#${this.hexColor}`)
-        const hspArr = CSpace.rgb.hsp(rgbArr)
+        const hspArr = this.hspColor.split(',')
+        const rgbArr = CSpace.hsp.rgb(hspArr)
         const maxS = this.getMaxSFromHSP(hspArr[0], hspArr[2])
         const intSr = this.getIntSR([rgbArr[0], rgbArr[1], rgbArr[2]], hspArr, maxS)
 
+        const rgbHEX = CString.to.hex(rgbArr).slice(1)
+
         return {
-            h: hspArr[0],
+            h: parseInt(hspArr[0], 10),
             s: parseInt(hspArr[1], 10),
-            p: hspArr[2],
+            p: parseInt(hspArr[2], 10),
             r: rgbArr[0],
             g: rgbArr[1],
             b: rgbArr[2],
-            hex: this.hexColor,
+            hex: rgbHEX,
         }
     },
     computed: {
@@ -153,7 +155,8 @@ export default {
 
             if (rgbHEX) {
                 this.hex = rgbHEX.slice(1)
-                this.$emit('update', { index: this.index, hex: this.hex })
+
+                this.$emit('update', { index: this.index, hsp: [this.h, this.s, this.p].join(',') })
             } else {
                 this.hex = 'Wrong HEX'
             }
@@ -191,7 +194,7 @@ export default {
                 this.sr = hspArr[1]/this.maxS*100
                 this.p = hspArr[2]
 
-                this.$emit('update', { index: this.index, hex: this.hex })
+                this.$emit('update', { index: this.index, hsp: [this.h, this.s, this.p].join(',') })
             }
         },
         makeCleanColor() {

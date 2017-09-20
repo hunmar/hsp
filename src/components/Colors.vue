@@ -1,7 +1,7 @@
 <template>
   <div class="colors">
     <Draggable :list="hspColors" :options="{handler:'.color'}">
-          <SingleColor v-for="(hsp, index) in hspColors" :hspColor="hsp" :index="index" :key="hsp+index" @update="updatehspColors"></SingleColor>
+          <SingleColor v-for="(hsp, index) in hspColors" :hspColor="hsp.value" :id="hsp.id" :key="hsp.id" @update="updatehspColors"></SingleColor>
           <!-- <Bridge v-if="hspColors.length > index + 1" :hspColorTop="hspColors[index]" :hspColorBottom="hspColors[index+1]"/> -->
     </Draggable>
     <el-button class="add-btn" type="primary" @click="addColor">Add color</el-button>
@@ -101,7 +101,8 @@ export default {
       g: rgbArr[1],
       b: rgbArr[2],
       hexColor: hexFromHash,
-      hspColors: colorsFromHash,
+      idCounter: colorsFromHash.length - 1,
+      hspColors: colorsFromHash.map(function (val, idx) {return {id: idx, value: val}}),
     }
   },
   computed: {
@@ -134,12 +135,16 @@ export default {
   },
   methods: {
     addColor() {
-      this.hspColors.push(this.hspColors[this.hspColors.length - 1])
-      window.location.hash = this.hspColors.join(';')
+      let clonedColor = this.hspColors[this.hspColors.length - 1];
+      this.idCounter++
+      clonedColor.id = this.idCounter
+      this.hspColors.push(clonedColor)
+      window.location.hash = _.map(this.hspColors, 'value').join(';')
     },
     updatehspColors(data) {
-      this.hspColors.splice(data.index, 1, data.hsp)
-      window.location.hash = this.hspColors.join(';')
+      let index = _.findIndex(this.hspColors, {id: data.id})
+      this.hspColors.splice(index, 1, data)
+      window.location.hash = _.map(this.hspColors, 'value').join(';')
     },
     recalculateRGB: _.throttle(function () {
       const rgbArr = CSpace.hsp.rgb(this.hsp)

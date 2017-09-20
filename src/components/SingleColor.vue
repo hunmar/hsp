@@ -46,7 +46,7 @@ import CString from 'color-string'
 
 export default {
     name: 'SingleColor',
-    props: ['index', 'hspColor'],
+    props: ['id', 'hspColor'],
     data() {
         const hspArr = this.hspColor.split(',')
         const rgbArr = CSpace.hsp.rgb(hspArr)
@@ -156,7 +156,7 @@ export default {
             if (rgbHEX) {
                 this.hex = rgbHEX.slice(1)
 
-                this.$emit('update', { index: this.index, hsp: [this.h, this.s, this.p].join(',') })
+                this.$emit('update', { id: this.id, value: [this.h, this.s, this.p].join(',') })
             } else {
                 this.hex = 'Wrong HEX'
             }
@@ -194,7 +194,7 @@ export default {
                 this.sr = hspArr[1] / this.maxS * 100
                 this.p = hspArr[2]
 
-                this.$emit('update', { index: this.index, hsp: [this.h, this.s, this.p].join(',') })
+                this.$emit('update', { index: this.index, value: [this.h, this.s, this.p].join(',') })
             }
         },
         makeCleanColor() {

@@ -194,6 +194,8 @@ export default {
                 this.sr = hspArr[1] / this.maxS * 100
                 this.p = hspArr[2]
 
+                this.fixedS = this.s
+
                 this.$emit('update', { index: this.index, value: [this.h, this.s, this.p].join(',') })
             }
         },

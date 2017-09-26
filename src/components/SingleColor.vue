@@ -190,9 +190,9 @@ export default {
 
                 const hspArr = CSpace.rgb.hsp(this.rgb)
 
-                this.h = hspArr[0]
-                this.s = hspArr[1]
-                this.p = hspArr[2]
+                this.h = parseInt(hspArr[0], 10)
+                this.s = parseInt(hspArr[1], 10)
+                this.p = parseInt(hspArr[2], 10)
 
                 this.fixedS = this.s
             }

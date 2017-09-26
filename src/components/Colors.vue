@@ -135,7 +135,7 @@ export default {
   },
   methods: {
     addColor() {
-      let clonedColor = this.hspColors[this.hspColors.length - 1];
+      let clonedColor = _.clone(this.hspColors[this.hspColors.length - 1]);
       this.idCounter++
       clonedColor.id = this.idCounter
       this.hspColors.push(clonedColor)

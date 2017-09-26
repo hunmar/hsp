@@ -195,8 +195,6 @@ export default {
                 this.p = hspArr[2]
 
                 this.fixedS = this.s
-
-                this.$emit('update', { index: this.index, value: [this.h, this.s, this.p].join(',') })
             }
         },
         makeCleanColor() {

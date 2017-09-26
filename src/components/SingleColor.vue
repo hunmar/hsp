@@ -6,7 +6,7 @@
                     <div class="color" v-bind:style="{ 'background-color': `rgb(${this.rgb.join(',')})` }"></div>
 
                     <div class="controls">
-                        <el-input @change="hexColorChanged" :value="this.hex">
+                        <el-input @change="hexColorChanged" @blur="handleChange" :value="this.hex">
                             <template slot="prepend">#</template>
                         </el-input>
                         <el-input-number @change="handleChangeH" :min="0" :max="360" :controls="false" :value="this.h">

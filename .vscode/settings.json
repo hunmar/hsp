@@ -1,0 +1,6 @@
+{
+  "eslint.validate": ["javascript", "javascriptreact", "vue"],
+  "prettier.eslintIntegration": true,
+  "prettier.disableLanguages": [],
+  "vetur.format.defaultFormatter.html": "prettier"
+}

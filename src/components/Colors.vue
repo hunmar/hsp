@@ -1,72 +1,10 @@
 <template>
   <div class="colors">
     <Draggable :list="hspColors" :options="{handler:'.color'}">
-          <SingleColor v-for="(hsp, index) in hspColors" :hspColor="hsp.value" :id="hsp.id" :key="hsp.id" @update="updatehspColors"></SingleColor>
-          <!-- <Bridge v-if="hspColors.length > index + 1" :hspColorTop="hspColors[index]" :hspColorBottom="hspColors[index+1]"/> -->
+      <SingleColor v-for="hsp in hspColors" :hspColor="hsp.value" :id="hsp.id" :key="hsp.id" @update="updatehspColors"></SingleColor>
+      <!-- <Bridge v-if="hspColors.length > index + 1" :hspColorTop="hspColors[index]" :hspColorBottom="hspColors[index+1]"/> -->
     </Draggable>
     <el-button class="add-btn" type="primary" @click="addColor">Add color</el-button>
-    <!-- <el-row :gutter="20">
-            <el-col class="color__example-container" :span="6" :offset="3">
-              <div class="color__example-1" v-bind:style="{ 'background-color': `rgb(${this.rgb.join(',')})` }"></div>
-              <div class="color__example-bw-1" v-bind:style="{ 'background-color': `rgb(${this.rgbbw.join(',')})` }"></div>
-              <div class="color__example-2" v-bind:style="{ 'background-color': `rgb(${this.rgb2.join(',')})` }"></div>
-              <div class="color__example-bw-2" v-bind:style="{ 'background-color': `rgb(${this.rgbbw2.join(',')})` }"></div>
-              <div class="color__example-3" v-bind:style="{ 'background-color': `rgb(${this.rgb3.join(',')})` }"></div>
-              <div class="color__example-bw-3" v-bind:style="{ 'background-color': `rgb(${this.rgbbw3.join(',')})` }"></div>
-            </el-col>
-            <el-col :span="12">
-              <el-form ref="form" label-width="50px">
-                <el-form-item label="HEX">
-                  <el-col :span="8">
-                    <el-input size="large" v-model="hexColor" @change="hexColorChanged">
-                      <template slot="prepend">#</template>
-                    </el-input>
-                  </el-col>
-                </el-form-item>
-                <el-form-item label="RGB">
-                  <el-col :span="8">
-                    <el-input-number type="number" size="large" v-model="r" @change="rgbColorChanged" :min="0" :max="255">
-                      <template slot="prepend">R</template>
-                    </el-input-number>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-input-number type="number" size="large" v-model="g" @change="rgbColorChanged" :min="0" :max="255">
-                      <template slot="prepend">G</template>
-                    </el-input-number>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-input-number type="number" size="large" v-model="b" @change="rgbColorChanged" :min="0" :max="255">
-                      <template slot="prepend">B</template>
-                    </el-input-number>
-                  </el-col>
-                </el-form-item>
-                <el-form-item label="HSP">
-                  <el-col :span="8">
-                    <el-input-number type="number" size="large" v-model="h" @change="hspColorChanged" :min="0" :max="360">
-                      <template slot="prepend">H</template>
-                    </el-input-number>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-input-number type="number" size="large" v-model="s" @change="hspColorChanged" :min="0" :max="100">
-                      <template slot="prepend">S</template>
-                    </el-input-number>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-input-number type="number" size="large" v-model="p" @change="hspColorChanged" :min="0" :max="255">
-                      <template slot="prepend">P</template>
-                    </el-input-number>
-                  </el-col>
-                </el-form-item>
-              </el-form>
-            </el-col>
-          </el-row> -->
-    <div class="colors__gradient">
-      <template class="p-axis" v-for="(pIndex, n) in 52">
-        <template v-for="(hIndex, m) in 37" class="h-axis">
-          <!-- <GradientColor :h="(hIndex-1)*10" :s="parseInt(s, 10)" :p="255-(pIndex - 1)*5"></GradientColor>  -->
-        </template>
-      </template>
-    </div>
   </div>
 </template>
 

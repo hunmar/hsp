@@ -1,42 +1,42 @@
 <template>
-    <el-row class="single-color">
-        <el-col>
-            <el-card shadow="never">
-                <div class="box-card">
-                    <div class="color" v-bind:style="{ 'background-color': `rgb(${this.rgb.join(',')})` }"></div>
+  <el-row class="single-color">
+    <el-col>
+      <el-card shadow="never">
+        <div class="box-card">
+          <div class="color" v-bind:style="{ 'background-color': `rgb(${this.rgb.join(',')})` }"></div>
 
-                    <div class="controls">
-                        <el-input @change="hexColorChanged" @blur="handleChange" :value="this.hex">
-                            <template slot="prepend">#</template>
-                        </el-input>
-                        <el-input-number @change="handleChangeH" :min="0" :max="360" :controls="false" :value="this.h">
-                            <template slot="prepend">H</template>
-                        </el-input-number>
-                        <el-input-number @change="handleChangeS" :min="0" :max="100" :controls="false" :value="this.s">
-                            <template slot="prepend">S</template>
-                        </el-input-number>
-                        <el-input-number @change="handleChangeP" :min="0" :max="255" :controls="false" :value="this.p">
-                            <template slot="prepend">P</template>
-                        </el-input-number>
-                        <div class="meta">
-                            <span>
-                                Max S: {{ this.maxS }}
-                            </span>
-                            <span>
-                                % S: {{ this.sr.toFixed(2) }}
-                            </span>
-                            <span>
-                                Delta S: {{ this.maxS - this.s }}
-                            </span>
-                            <span>
-                                Fixed S: {{ this.fixedS }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </el-card>
-        </el-col>
-    </el-row>
+          <div class="controls">
+            <el-input @change="hexColorChanged" @blur="handleChange" :value="this.hex">
+              <template slot="prepend">#</template>
+            </el-input>
+            <el-input-number @change="handleChangeH" :min="0" :max="360" :controls="false" :value="this.h">
+              <template slot="prepend">H</template>
+            </el-input-number>
+            <el-input-number @change="handleChangeS" :min="0" :max="100" :controls="false" :value="this.s">
+              <template slot="prepend">S</template>
+            </el-input-number>
+            <el-input-number @change="handleChangeP" :min="0" :max="255" :controls="false" :value="this.p">
+              <template slot="prepend">P</template>
+            </el-input-number>
+            <div class="meta">
+              <span>
+                Max S: {{ this.maxS }}
+              </span>
+              <span>
+                % S: {{ this.sr.toFixed(2) }}
+              </span>
+              <span>
+                Delta S: {{ this.maxS - this.s }}
+              </span>
+              <span>
+                Fixed S: {{ this.fixedS }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -50,12 +50,6 @@ export default {
   data() {
     const hspArr = this.hspColor.split(",");
     const rgbArr = CSpace.hsp.rgb(hspArr);
-    const maxS = this.getMaxSFromHSP(hspArr[0], hspArr[2]);
-    const intSr = this.getIntSR(
-      [rgbArr[0], rgbArr[1], rgbArr[2]],
-      hspArr,
-      maxS
-    );
 
     const rgbHEX = CString.to.hex(rgbArr).slice(1);
 
@@ -71,14 +65,12 @@ export default {
   },
   computed: {
     hsp() {
-      console.log("Calc HSP");
       var s =
         this.fixedS < parseInt(this.s, 10) ? this.fixedS : parseInt(this.s, 10);
 
       return [parseInt(this.h, 10), s, parseInt(this.p, 10)];
     },
     hsrp() {
-      console.log("Calc HSrP");
       return [
         parseInt(this.h, 10),
         parseInt(this.sr, 10) * this.maxS / 100,
@@ -119,40 +111,35 @@ export default {
       let sr = etalonHSP[1] / maxS * 100;
       let p = etalonHSP[2];
 
-      console.log("etalonRGB", etalonRGB);
-
       if (sr === parseInt(sr, 10)) {
-        console.log("sr");
         return sr;
       }
 
       let roundSR = Math.round(sr);
-      console.log("roundSR", CSpace.hsp.rgb([h, roundSR * maxS / 100, p]));
+
       if (_.isEqual(CSpace.hsp.rgb([h, roundSR * maxS / 100, p]), etalonRGB)) {
-        console.log("roundSR");
         return roundSR;
       }
 
       let floorSR = Math.floor(sr);
-      console.log("floorSR", CSpace.hsp.rgb([h, floorSR * maxS / 100, p]));
+
       if (_.isEqual(CSpace.hsp.rgb([h, floorSR * maxS / 100, p]), etalonRGB)) {
-        console.log("floorSR");
         return floorSR;
       }
     },
-    handleChangeH(next, prev) {
+    handleChangeH(next) {
       this.h = next;
       this.handleChange();
     },
-    handleChangeS(next, prev) {
+    handleChangeS(next) {
       this.s = next;
       this.handleChange();
     },
-    handleChangeSR(next, prev) {
+    handleChangeSR(next) {
       this.sr = next;
       this.handleChange();
     },
-    handleChangeP(next, prev) {
+    handleChangeP(next) {
       this.p = next;
       this.handleChange();
     },
@@ -191,10 +178,10 @@ export default {
       }
 
       maxS = maxS - 1;
-      console.log("maxS", maxS);
+
       return maxS;
     },
-    hexColorChanged(next, prev) {
+    hexColorChanged(next) {
       this.hex = next;
       const rgbArr = CString.get.rgb(`#${this.hex}`);
 

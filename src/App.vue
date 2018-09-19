@@ -5,26 +5,22 @@
 </template>
 
 <script>
-import Colors from './components/Colors';
+import Colors from "./components/Colors";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
-    Colors,
-  },
+    Colors
+  }
 };
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   margin-top: 60px;
-}
-
-.el-input-number .el-input {
-  display: inline-table;
 }
 </style>

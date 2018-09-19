@@ -3,14 +3,14 @@
 </template>
 
 <script>
-import CS from 'color-space';
+import CS from "color-space";
 
 export default {
-  name: 'GradientColor',
-  props: ['h', 's', 'p'],
+  name: "GradientColor",
+  props: ["h", "s", "p"],
   data() {
     return {
-      isBadClass: false,
+      isBadClass: false
     };
   },
   methods: {
@@ -22,11 +22,13 @@ export default {
       }
 
       this.isBadClass = isBad;
-      const styleObj = { 'background-color': `rgb(${CS.hsp.rgb(hsp).join(',')})` };
+      const styleObj = {
+        "background-color": `rgb(${CS.hsp.rgb(hsp).join(",")})`
+      };
 
       return styleObj;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -37,7 +39,7 @@ export default {
 }
 
 .colors__gradient {
-  grid-template-columns: repeat(37, 1fr) auto;  
+  grid-template-columns: repeat(37, 1fr) auto;
 }
 
 .p-axis {
@@ -47,15 +49,12 @@ export default {
 .h-axis {
   display: inline-block;
   width: calc(100% / 37);
-  height: 25px;    
+  height: 25px;
   position: relative;
 }
 
 .h-axis_bad {
-  box-shadow: -1px 0 0 0 #e6e6e6 inset,
-    0 -1px 0 0 #e6e6e6 inset,
-    -1px -1px 0 0 #e6e6e6 inset,
-    -1px 0 0 0 #e6e6e6,
-    0 -1px 0 0 #e6e6e6;
+  box-shadow: -1px 0 0 0 #e6e6e6 inset, 0 -1px 0 0 #e6e6e6 inset,
+    -1px -1px 0 0 #e6e6e6 inset, -1px 0 0 0 #e6e6e6, 0 -1px 0 0 #e6e6e6;
 }
 </style>
